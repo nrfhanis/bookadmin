@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPBS - Admin Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        body { background-color: #0f172a; color: #333; scroll-behavior: smooth; overflow-x: hidden; }
+        #auth-section { display: flex; height: 100vh; width: 100%; background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600') no-repeat center center/cover; position: relative; }
+        #auth-section::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 1; }
+        
+        .hero-side { flex: 1.2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; color: white; padding: 0 10% ; z-index: 2; }
+        .hero-side h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; font-weight: 700; }
+        .hero-side p { font-size: 1.2rem; opacity: 0.9; border-left: 4px solid #ef4444; padding-left: 15px; }
+        
+        .form-side { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; z-index: 2; }
+        .login-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 50px 40px; border-radius: 24px; width: 100%; max-width: 450px; color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        
+        .mpp-badge { font-weight: 600; letter-spacing: 2px; color: #ef4444; font-size: 0.9rem; margin-bottom: 10px; display: block; }
+        .login-card h2 { font-size: 2.2rem; margin-bottom: 10px; }
+        .login-card p.subtitle { color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; font-size: 0.95rem; }
+        
+        .input-group { width: 100%; position: relative; margin-bottom: 20px; }
+        .input-field { width: 100%; padding: 16px 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; outline: none; color: white; font-size: 1rem; transition: 0.3s; }
+        .input-field:focus { border-color: #ef4444; background: rgba(255, 255, 255, 0.1); }
+        
+        .btn-main { width: 100%; padding: 16px; background: #ef4444; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: 0.3s; margin-top: 10px; }
+        .btn-main:hover { background: #dc2626; transform: translateY(-2px); }
+        
+        .divider { display: flex; align-items: center; margin: 25px 0; color: rgba(255, 255, 255, 0.3); font-size: 0.8rem; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); margin: 0 10px; }
+        
+        .btn-google { width: 100%; padding: 14px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; color: white; transition: 0.3s; }
+        .btn-google:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .toggle-text { margin-top: 25px; text-align: center; font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
+        .toggle-text span#toggle-btn { color: #ef4444; cursor: pointer; font-weight: 600; text-decoration: underline; }
+
+        /* --- REDESIGN BOOKING EQUIPMENTS --- */
+        #booking-section {
+            padding: 100px 8%;
+            background-color: #f8fafc;
+            text-align: center;
+        }
+
+        #booking-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            color: #0f172a;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        #booking-section h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #ef4444;
+            border-radius: 2px;
+        }
+
+        .booking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .booking-card {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f1f5f9;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        .card-img-container {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            background-color: #e2e8f0; /* Fallback color */
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .booking-card:hover .card-img-container img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 30px;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .card-content h3 {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .card-content p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-book {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .booking-card:hover .btn-book {
+            background: #ef4444;
+            transform: scale(1.02);
+        }
+
+        .btn-book i {
+            margin-left: 8px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<section id="auth-section">
+    <div class="hero-side">
+        <h1>LOGIN TO<br>ADMIN SYSTEM</h1>
+        <p>Majlis Perbandaran Pekan Bandar Diraja</p>
+    </div>
+    <div class="form-side">
+        <div class="login-card">
+            <span class="mpp-badge">MPPBS</span>
+            <h2 id="auth-title">Login</h2>
+            <p class="subtitle" id="auth-subtitle">Please log in to manage your booking.</p>
+            
+            <div class="input-group">
+                <input type="email" id="email" class="input-field" placeholder="Email Address">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" class="input-field" placeholder="Password">
+            </div>
+            
+            <button id="btnAction" class="btn-main">Log In</button>
+            
+            <div class="divider">or continue with</div>
+            
+            <button id="btnGoogle" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Google Login
+            </button>
+            
+            <p class="toggle-text">
+                <span id="toggle-label">New Admin?</span> 
+                <span id="toggle-btn" onclick="toggleAuth()">Register Here</span>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="booking-section">
+    <h2>Booking Equipments</h2>
+    <div class="booking-grid">
+        
+        <div class="booking-card">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=800&q=80" alt="Van">
+            </div>
+            <div class="card-content">
+                <h3>Van Official</h3>
+                <p>Van booking for official department affairs and group travel.</p>
+                <a href="#" class="btn-book">For Booking<i class="fas fa-calendar-check"></i></a>
+            </div>
+        </div>
+
+        <div class="booking-card">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80" alt="Car">
+            </div>
+            <div class="card-content">
+                <h3>Executive Car</h3>
+                <p>Executive vehicles are available for site visits and external meetings.</p>
+                <a href="#" class="btn-book">For Booking <i class="fas fa-calendar-check"></i></a>
+            </div>
+        </div>
+
+        <div class="booking-card">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&w=800&q=80" alt="Meeting Room">
+            </div>
+            <div class="card-content">
+                <h3>Meeting Room</h3>
+                <p>The conducive meeting room is equipped with the latest audio visual system.</p>
+                <a href="#" class="btn-book">For Booking <i class="fas fa-calendar-check"></i></a>
+            </div>
+        </div>
+
+        <div class="booking-card">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80" alt="Hall">
+            </div>
+            <div class="card-content">
+                <h3>Main Event Hall</h3>
+                <p>Spacious main hall for parties, seminars, and formal gatherings.</p>
+                <a href="#" class="btn-book">For Booking <i class="fas fa-calendar-check"></i></a>
+            </div>
+        </div>
+
+        <div class="booking-card">
+            <div class="card-img-container">
+                <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800&q=80" alt="Football Field">
+            </div>
+            <div class="card-content">
+                <h3>Sports Complex</h3>
+                <p>Football field facilities and sports complex for leisure activities.</p>
+                <a href="#" class="btn-book">For Booking<i class="fas fa-calendar-check"></i></a>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        createUserWithEmailAndPassword, 
+        GoogleAuthProvider, 
+        signInWithPopup 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtkIJ0hZD6mXiC7fE6sYDvpqohSsn0c7s",
+        authDomain: "smartbook-f1315.firebaseapp.com",
+        projectId: "smartbook-f1315",
+        storageBucket: "smartbook-f1315.firebasestorage.app",
+        messagingSenderId: "778504441106",
+        appId: "1:778504441106:web:704d93dca91fda099c77cb",
+        measurementId: "G-XGF59S5B62"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let isLoginMode = true;
+
+    // Fungsi Tukar Mod Login/Register
+    window.toggleAuth = function() {
+        isLoginMode = !isLoginMode;
+        document.getElementById("auth-title").innerText = isLoginMode ? "Login" : "Sign Up";
+        document.getElementById("auth-subtitle").innerText = isLoginMode ? "Please log in to manage your booking." : "Create a new admin account.";
+        document.getElementById("btnAction").innerText = isLoginMode ? "Log In" : "Register Now";
+        document.getElementById("toggle-label").innerText = isLoginMode ? "Already have an account?" : "New Admin?";
+        document.getElementById("toggle-btn").innerText = isLoginMode ? "Login Here" : "Register Here";
+    };
+
+    // Fungsi Button Utama (Login atau Register)
+    document.getElementById("btnAction").addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) { 
+            alert("Sila isi maklumat lengkap."); 
+            return; 
+        }
+
+        try {
+            if (isLoginMode) {
+                // Proses Login
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "book.html"; 
+            } else { 
+                // Proses Register
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // SIMPAN KE FIRESTORE (Koleksi: users) - Paksa tunggu (await) sehingga selesai
+                await setDoc(doc(db, "users", user.uid), { 
+                    email: email, 
+                    role: "admin",
+                    createdAt: new Date()
+                });
+
+                alert("Account created successfully!");
+                window.location.href = "book.html"; 
+            }
+        } catch (e) { 
+            alert("Error: " + e.message); 
+        }
+    });
+
+    // Fungsi Google Login
+    document.getElementById("btnGoogle").addEventListener("click", async () => {
+        try { 
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                role: "admin"
+            }, { merge: true });
+
+            window.location.href = "book.html"; 
+
+        } catch (e) { 
+            alert("Error Google: " + e.message); 
+        }
+    });
+</script>
+
+</body>
+</html>
